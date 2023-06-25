@@ -38,7 +38,7 @@ app.post('/login', async (req, res) => {
   res.status(200).json({ token });
 });
 
-// Req 3 and 4
+// Req 3 and 4 /
 app.post('/login', validateEmail, validatePassword, async (req, res) => {
   const token = generateToken();
   res.status(200).json({ token });
