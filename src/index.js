@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { readTalker, findById } = require('./talkerFunctions');
 const generateToken = require('./generateToken');
+const validateEmail = require('./middlewares/validateEmail');
+const validatePassword = require('./middlewares/validatePassword');
 
 const app = express();
 app.use(express.json());
@@ -32,6 +34,12 @@ app.get('/talker/:id', async (req, res) => {
 
 // Req 3
 app.post('/login', async (req, res) => {
+  const token = generateToken();
+  res.status(200).json({ token });
+});
+
+// Req 3 and 4
+app.post('/login', validateEmail, validatePassword, async (req, res) => {
   const token = generateToken();
   res.status(200).json({ token });
 });
