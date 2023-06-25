@@ -1,11 +1,11 @@
 module.exports = (req, res, next) => {
-    if (!req.body.password) {
+    const { password } = req.body;
+
+    if (!password || password.trim() === '') {
         return res
             .status(400)
             .json({ message: 'O campo "password" é obrigatório' });
     }
-
-    const { password } = req.body;
 
     if (password.length < 6) {
         return res
