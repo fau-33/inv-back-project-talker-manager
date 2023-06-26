@@ -3,6 +3,10 @@ const { join } = require('path');
 
 const path = join(__dirname, 'talker.json');
 
+const writeFile = async (talkers) => {
+    await fs.writeFile(path, JSON.stringify(talkers));
+};
+  
 const readTalker = async () => {
     const talkers = await fs.readFile(path);
     return JSON.parse(talkers);
@@ -24,8 +28,24 @@ const writeTalker = async (talker) => {
     return newTalker;
   };
 
+const updateTalker = async (id, talker) => {
+    const talkers = await readTalker();
+    const talkerIndex = talkers.findIndex((t) => t.id === id);
+    const newTalker = { id, ...talker };
+
+    if (talkerIndex === -1) {
+        return false; // Retorna null se a pessoa palestrante não for encontrada
+      }
+  
+    talkers[talkerIndex] = newTalker;
+    await writeFile(talkers);
+  
+    return newTalker;
+  };  
+
 module.exports = {
     readTalker,
     findById,
     writeTalker,
+    updateTalker,
 };

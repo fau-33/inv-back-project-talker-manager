@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalker, findById, writeTalker } = require('./talkerFunctions');
+const { readTalker, findById, writeTalker, updateTalker } = require('./talkerFunctions');
 const generateToken = require('./generateToken');
 const {
   validateEmail,
@@ -61,6 +61,20 @@ app.post(
     res.status(201).json(talker);
   },
 );
+
+// Req 6
+app.put('/talker/:id', 
+  validateToken, 
+  validateName, validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => {
+  const { id } = req.params;
+  const talker = await updateTalker(Number(id), req.body);
+
+  if (!talker) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  return res.status(200).json(talker);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
