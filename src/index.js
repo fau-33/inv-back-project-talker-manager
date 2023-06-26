@@ -1,9 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalker, findById } = require('./talkerFunctions');
+const { readTalker, findById, writeTalker } = require('./talkerFunctions');
 const generateToken = require('./generateToken');
-const validateEmail = require('./middlewares/validateEmail');
-const validatePassword = require('./middlewares/validatePassword');
+const {
+  validateEmail,
+  validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+// eslint-disable-next-line import/no-unresolved
+} = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,6 +46,21 @@ app.post('/login', validateEmail, validatePassword, (req, res) => {
   const token = generateToken();
   res.status(200).json({ token });
 });
+
+// Req 5
+app.post(
+  '/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const talker = await writeTalker(req.body);
+    res.status(201).json(talker);
+  },
+);
 
 app.listen(PORT, () => {
   console.log('Online');
